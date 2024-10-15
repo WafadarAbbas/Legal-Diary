@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; 
 import ApiCall from '../../../Apicall/ApiCall';
-import Select from 'react-select'; // Import react-select
+import Select from 'react-select';  
 import Swal from 'sweetalert2';
 
 
@@ -278,7 +278,7 @@ const CreateLawyer = (props) => {
               }))}
               onChange={(option) => {
                 formik.setFieldValue('provinceId', option.value);
-                fetchDivisions(option.value); // Fetch divisions when province changes
+                fetchDivisions(option.value); 
               }}
               onBlur={formik.handleBlur}
             />
@@ -298,7 +298,7 @@ const CreateLawyer = (props) => {
               }))}
               onChange={(option) => {
                 formik.setFieldValue('divisionId', option.value);
-                fetchCities(option.value); // Fetch cities when division changes
+                fetchCities(option.value); 
               }}
               onBlur={formik.handleBlur}
             />
@@ -318,7 +318,7 @@ const CreateLawyer = (props) => {
               }))}
               onChange={(option) => {
                 formik.setFieldValue('cityId', option.value);
-                fetchTehsils(option.value); // Fetch tehsils when city changes
+                fetchTehsils(option.value); 
               }}
               onBlur={formik.handleBlur}
             />

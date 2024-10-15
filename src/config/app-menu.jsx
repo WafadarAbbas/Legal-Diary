@@ -28,7 +28,13 @@ const Menu = [
  
   { path: '/LawyerStuff', icon: 'fa fa-user-tie', title: 'Lawyer Stuff', 
     children: [
-      { path: '/LawyerStuff/Lawyer', title: 'Lawyer', icon: 'fa fa-suitcase', },
+      { path: '/LawyerStuff/Lawyer', title: 'Lawyer', icon: 'fa fa-stamp', },
+    ]
+  },
+  { path: '/OfficerPanel', icon: 'fa fa-hammer', title: 'Officer Panel', 
+    children: [
+      { path: '/OfficerPanel/Designation', title: 'Designation', icon: 'fa fa-suitcase', },
+      { path: '/OfficerPanel/PresidingOfficer', title: 'Presiding Officer', icon: 'fa fa-graduation-cap', },
     ]
   },
   { path: '/Testing', icon: 'fa fa-gear', title: 'Testing', 

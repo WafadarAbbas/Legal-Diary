@@ -85,6 +85,9 @@ import LitigantType from '../pages/GenericType/LitigantType/litigantType.jsx';
 import Bench from '../pages/CourtPanel/Bench/Bench.jsx';
 import Court from '../pages/CourtPanel/Court/Court.jsx';
 import Lawyer from '../pages/Lawyer Stuff/Lawyer/Lawyer.jsx';
+import Designation from '../pages/OfficerPanel/Designation/Designation.jsx';
+import PresidingOfficer from '../pages/OfficerPanel/PresidingOfficer/PresidingOfficer.jsx';
+
 
  
  
@@ -142,6 +145,15 @@ const AppRoute = [
 				element: <ProtectedRoute />,
 				children: [
 					{ path: 'Lawyer', element: <Lawyer/> },
+					
+				]
+			},
+			{
+				path: 'OfficerPanel/*', 
+				element: <ProtectedRoute />,
+				children: [
+					{ path: 'Designation', element: <Designation/> },
+					{ path: 'PresidingOfficer', element: <PresidingOfficer/> },
 					
 				]
 			},

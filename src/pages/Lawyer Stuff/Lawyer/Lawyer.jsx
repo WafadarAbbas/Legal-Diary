@@ -9,7 +9,7 @@ import EditLawyer from './EditLawyer';
 import ApiCall from '../../../Apicall/ApiCall';
 import { useTestPanel } from '../../../Compo/TestPanelContext';
 import Footer from '../../../Compo/Footer';
- 
+
 const Lawyer = () => {
     const navigate = useNavigate();
     const createRef = useRef(null);
