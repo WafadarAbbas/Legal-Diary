@@ -139,6 +139,7 @@ const CreateLawyer = (props) => {
       divisionId: '',
       cityId: '',
       tehsilId: '',
+     
     },
     validationSchema: Yup.object({
       // lawyerLiscene: Yup.string().required('License No is required'),
