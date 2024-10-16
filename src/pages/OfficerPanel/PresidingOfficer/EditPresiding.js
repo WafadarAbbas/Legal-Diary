@@ -35,7 +35,7 @@ const EditPresiding = (props) => {
         }
     };
 
-    // Fetch designation options
+ 
     const fetchDesignations = async () => {
         try {
             const response = await ApiCall({
@@ -59,19 +59,19 @@ const EditPresiding = (props) => {
 
     useEffect(() => {
         if (props.officerId) {
-            fetchPresidingOfficerData(props.officerId); // Fetch presiding officer details
+            fetchPresidingOfficerData(props.officerId); 
         }
         fetchDesignations();  
     }, [props.officerId]);
 
  
     const formik = useFormik({
-        enableReinitialize: true, // This allows formik to update the form when initialValues change
+        enableReinitialize: true,  
         initialValues,
         validationSchema: Yup.object({
             presidingOfficerName: Yup.string().required('Name is required'),
             presidingOfficerNameNotes: Yup.string().required('Notes are required'),
-            designationId: Yup.string().required('Designation is required') // Validation for select field
+            designationId: Yup.string().required('Designation is required')  
         }),
         onSubmit: async (values) => {
             const payload = {

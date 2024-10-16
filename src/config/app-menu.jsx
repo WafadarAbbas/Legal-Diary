@@ -37,6 +37,12 @@ const Menu = [
       { path: '/OfficerPanel/PresidingOfficer', title: 'Presiding Officer', icon: 'fa fa-graduation-cap', },
     ]
   },
+
+  { path: '/CaseManagement', icon: 'fa fa-folder-open', title: 'CaseManagement', 
+    children: [
+      { path: '/CaseManagement/CaseRegistration', title: 'Case Registration', icon: 'fa fa-file-alt', },
+    ]
+  },
   { path: '/Testing', icon: 'fa fa-gear', title: 'Testing', 
     children: [
       { path: '/Testing/Testing', title: 'Testing', icon: 'fa fa-gear', },

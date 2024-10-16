@@ -87,6 +87,7 @@ import Court from '../pages/CourtPanel/Court/Court.jsx';
 import Lawyer from '../pages/Lawyer Stuff/Lawyer/Lawyer.jsx';
 import Designation from '../pages/OfficerPanel/Designation/Designation.jsx';
 import PresidingOfficer from '../pages/OfficerPanel/PresidingOfficer/PresidingOfficer.jsx';
+import CaseRegistration from '../pages/Case Management/CaseRegistration/CaseRegistration.jsx';
 
 
  
@@ -154,6 +155,15 @@ const AppRoute = [
 				children: [
 					{ path: 'Designation', element: <Designation/> },
 					{ path: 'PresidingOfficer', element: <PresidingOfficer/> },
+					
+				]
+			},
+			{
+				path: 'CaseManagement/*', 
+				element: <ProtectedRoute />,
+				children: [
+					{ path: 'CaseRegistration', element: <CaseRegistration/> },
+			
 					
 				]
 			},
