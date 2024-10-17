@@ -1,19 +1,14 @@
-// CreateRegistration.js
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
 import ApiCall from "../../../Apicall/ApiCall";
-import AddCaseTypeModal from "./AddCaseTypeModal";
 
 const CreateRegistration = (props) => {
   const [branches, setBranches] = useState([]);
   const [caseTypes, setCaseTypes] = useState([]);
   const [firstLitigantTypes, setFirstLitigantTypes] = useState([]);
   const [secondLitigantTypes, setSecondLitigantTypes] = useState([]);
-  const [showAddCaseTypeModal, setShowAddCaseTypeModal] = useState(false);
-  const [branchError, setBranchError] = useState(null);
-  const [caseTypeError, setCaseTypeError] = useState(null);
 
   useEffect(() => {
     const fetchFirstLitigantTypes = async () => {
@@ -55,7 +50,6 @@ const CreateRegistration = (props) => {
     fetchSecondLitigantTypes();
   }, []);
 
- 
   const fetchBranches = async () => {
     try {
       const response = await ApiCall({
@@ -64,12 +58,9 @@ const CreateRegistration = (props) => {
       });
       if (response?.data?.result?.items) {
         setBranches(response.data.result.items);
-      } else {
-        setBranchError("No branches found.");
       }
     } catch (error) {
       console.error("Failed to fetch branch data:", error);
-      setBranchError(error?.response?.data?.message || "An error occurred while fetching branches.");
     }
   };
 
@@ -81,12 +72,9 @@ const CreateRegistration = (props) => {
       });
       if (response?.data?.result?.items) {
         setCaseTypes(response.data.result.items);
-      } else {
-        setCaseTypeError("No case types found.");
       }
     } catch (error) {
       console.error("Failed to fetch case types:", error);
-      setCaseTypeError(error?.response?.data?.message || "An error occurred while fetching case types.");
     }
   };
 
@@ -94,7 +82,6 @@ const CreateRegistration = (props) => {
     fetchBranches();
     fetchCaseTypes();
   }, []);
-
 
   const formik = useFormik({
     initialValues: {
@@ -126,12 +113,12 @@ const CreateRegistration = (props) => {
       policeStation: "",
       courtCaseGenNo: "",
       courtCaseGaffNo: "",
-      caseNotes: "",  
-      casePleadings: "",  
-      caseBenchStatus: false,  
-    bNotes: "", 
-    caseLawyerStatus: false,   
-    lNotes: "", 
+      caseNotes: "",
+      casePleadings: "",
+      caseBenchStatus: false,
+      bNotes: "",
+      caseLawyerStatus: false,
+      lNotes: "",
     },
     validationSchema: Yup.object({}),
     onSubmit: (values) => {
@@ -233,10 +220,12 @@ const CreateRegistration = (props) => {
                     aria-labelledby="case-registration-tab"
                   >
                     <div className="row ">
-                      <div className="col-6 mb-3">
-                      {branchError && <div className="alert alert-danger">{branchError}</div>}
-                      {caseTypeError && <div className="alert alert-danger">{caseTypeError}</div>}
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="branchId" className="form-label">
+                      <div className="col-4 mb-3">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="branchId"
+                          className="form-label"
+                        >
                           Select Branch
                         </label>
                         <Select
@@ -268,18 +257,15 @@ const CreateRegistration = (props) => {
                         ) : null}
                       </div>
 
-                      <div className="col-6 mb-3">
+                      <div className="col-4 mb-3">
                         <div className="d-flex justify-content-between">
-                          <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseTypeId" className="form-label">
+                          <label
+                            style={{ fontSize: "14px", fontWeight: "bold" }}
+                            htmlFor="caseTypeId"
+                            className="form-label"
+                          >
                             Select Case Type
                           </label>
-                          <button
-                            type="button"
-                            className="btn btn-outline-dark btn-xs"
-                            onClick={() => setShowAddCaseTypeModal(true)}
-                          >
-                            Add
-                          </button>
                         </div>
                         <Select
                           id="caseTypeId"
@@ -314,7 +300,11 @@ const CreateRegistration = (props) => {
 
                     <div className="row mt-3">
                       <div className="col-4 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseRegDate" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="caseRegDate"
+                          className="form-label"
+                        >
                           Case Registration Date
                         </label>
                         <input
@@ -335,7 +325,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-4 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseStartDate" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="caseStartDate"
+                          className="form-label"
+                        >
                           Case Start Date
                         </label>
                         <input
@@ -356,7 +350,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-4 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseEndDate" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="caseEndDate"
+                          className="form-label"
+                        >
                           Case End Date
                         </label>
                         <input
@@ -388,9 +386,9 @@ const CreateRegistration = (props) => {
                         <Select
                           id="firstLitigantTypeId"
                           name="firstLitigantTypeId"
-                          options={firstLitigantTypes} // Use the new state
-                          getOptionLabel={(option) => option.label} // Adjusted to use 'label'
-                          getOptionValue={(option) => option.value} // Adjusted to use 'value'
+                          options={firstLitigantTypes}
+                          getOptionLabel={(option) => option.label}
+                          getOptionValue={(option) => option.value}
                           value={firstLitigantTypes.find(
                             (type) =>
                               type.value === formik.values.firstLitigantTypeId
@@ -417,7 +415,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-3 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="firstPartyName" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="firstPartyName"
+                          className="form-label"
+                        >
                           First Party Name
                         </label>
                         <input
@@ -438,7 +440,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-3 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="firstLawyerName" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="firstLawyerName"
+                          className="form-label"
+                        >
                           First Lawyer Name
                         </label>
                         <input
@@ -459,7 +465,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-3 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="firNo" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="firNo"
+                          className="form-label"
+                        >
                           FIR No
                         </label>
                         <input
@@ -490,9 +500,9 @@ const CreateRegistration = (props) => {
                         <Select
                           id="secLitigantTypeId"
                           name="secLitigantTypeId"
-                          options={secondLitigantTypes} // Use the new state
-                          getOptionLabel={(option) => option.label} // Adjusted to use 'label'
-                          getOptionValue={(option) => option.value} // Adjusted to use 'value'
+                          options={secondLitigantTypes}
+                          getOptionLabel={(option) => option.label}
+                          getOptionValue={(option) => option.value}
                           value={secondLitigantTypes.find(
                             (type) =>
                               type.value === formik.values.secLitigantTypeId
@@ -519,7 +529,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-3 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="secondPartyName" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="secondPartyName"
+                          className="form-label"
+                        >
                           Second Party Name
                         </label>
                         <input
@@ -540,7 +554,8 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-3 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }}
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
                           htmlFor="secondLawyerName"
                           className="form-label"
                         >
@@ -564,7 +579,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-3 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="offence" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="offence"
+                          className="form-label"
+                        >
                           Offence
                         </label>
                         <input
@@ -586,7 +605,11 @@ const CreateRegistration = (props) => {
 
                     <div className="row mt-3">
                       <div className="col-1 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseStatus" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="caseStatus"
+                          className="form-label"
+                        >
                           Case Status
                         </label>
                         <input
@@ -601,7 +624,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-1 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseShift" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="caseShift"
+                          className="form-label"
+                        >
                           Case Shift
                         </label>
                         <input
@@ -616,7 +643,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-1 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseFinish" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="caseFinish"
+                          className="form-label"
+                        >
                           Case Finish
                         </label>
                         <input
@@ -631,7 +662,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-2 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="firDate" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="firDate"
+                          className="form-label"
+                        >
                           FIR Date
                         </label>
                         <input
@@ -651,7 +686,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-2 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="policeStation" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="policeStation"
+                          className="form-label"
+                        >
                           Police Station
                         </label>
                         <input
@@ -672,7 +711,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-2 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="courtCaseGenNo" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="courtCaseGenNo"
+                          className="form-label"
+                        >
                           Case Gen No
                         </label>
                         <input
@@ -693,7 +736,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-2 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="courtCaseGaffNo" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="courtCaseGaffNo"
+                          className="form-label"
+                        >
                           Case Gaff No
                         </label>
                         <input
@@ -716,7 +763,11 @@ const CreateRegistration = (props) => {
 
                     <div className="row mt-3">
                       <div className="col-6 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseNotes" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="caseNotes"
+                          className="form-label"
+                        >
                           Case Notes
                         </label>
                         <textarea
@@ -726,7 +777,7 @@ const CreateRegistration = (props) => {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.caseNotes}
-                          rows={2} // Adjust the number of rows as necessary
+                          rows={2}
                         />
                         {formik.touched.caseNotes && formik.errors.caseNotes ? (
                           <div className="text-danger">
@@ -736,7 +787,11 @@ const CreateRegistration = (props) => {
                       </div>
 
                       <div className="col-6 mb-3">
-                        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="casePleadings" className="form-label">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="casePleadings"
+                          className="form-label"
+                        >
                           Case Pleadings
                         </label>
                         <textarea
@@ -746,7 +801,7 @@ const CreateRegistration = (props) => {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           value={formik.values.casePleadings}
-                          rows={2} // Adjust the number of rows as necessary
+                          rows={2}
                         />
                         {formik.touched.casePleadings &&
                         formik.errors.casePleadings ? (
@@ -758,169 +813,206 @@ const CreateRegistration = (props) => {
                     </div>
                   </div>
                   <div
-  className="tab-pane fade border p-3"
-  id="case-bench"
-  role="tabpanel"
-  aria-labelledby="case-bench-tab"
->
-  <div className="row mb-3">
-    <div className="col-4 mb-3">
-      <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="bStartDate" className="form-label">
-        Bench Start Date
-      </label>
-      <input
-        id="bStartDate"
-        name="bStartDate"
-        type="date"
-        className="form-control"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.bStartDate}
-      />
-      {formik.touched.bStartDate && formik.errors.bStartDate ? (
-        <div className="text-danger">{formik.errors.bStartDate}</div>
-      ) : null}
-    </div>
+                    className="tab-pane fade border p-3"
+                    id="case-bench"
+                    role="tabpanel"
+                    aria-labelledby="case-bench-tab"
+                  >
+                    <div className="row mb-3">
+                      <div className="col-4 mb-3">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="bStartDate"
+                          className="form-label"
+                        >
+                          Bench Start Date
+                        </label>
+                        <input
+                          id="bStartDate"
+                          name="bStartDate"
+                          type="date"
+                          className="form-control"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.bStartDate}
+                        />
+                        {formik.touched.bStartDate &&
+                        formik.errors.bStartDate ? (
+                          <div className="text-danger">
+                            {formik.errors.bStartDate}
+                          </div>
+                        ) : null}
+                      </div>
 
-    <div className="col-4 mb-3">
-      <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="bEndDate" className="form-label">
-        Bench End Date
-      </label>
-      <input
-        id="bEndDate"
-        name="bEndDate"
-        type="date"
-        className="form-control"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.bEndDate}
-      />
-      {formik.touched.bEndDate && formik.errors.bEndDate ? (
-        <div className="text-danger">{formik.errors.bEndDate}</div>
-      ) : null}
-    </div>
-  </div>
+                      <div className="col-4 mb-3">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="bEndDate"
+                          className="form-label"
+                        >
+                          Bench End Date
+                        </label>
+                        <input
+                          id="bEndDate"
+                          name="bEndDate"
+                          type="date"
+                          className="form-control"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.bEndDate}
+                        />
+                        {formik.touched.bEndDate && formik.errors.bEndDate ? (
+                          <div className="text-danger">
+                            {formik.errors.bEndDate}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
 
-  {/* New row for caseBenchStatus and bNotes */}
-  <div className="row mb-3">
-    <div className="col-3">
-      <div className="form-check">
-        <input
-          id="caseBenchStatus"
-          name="caseBenchStatus"
-          type="checkbox"
-          className="form-check-input"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          checked={formik.values.caseBenchStatus}
-        />
-        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseBenchStatus" className="form-check-label">
-          Case Bench Status
-        </label>
-      </div>
-    </div>
-    
-    <div className="col-9">
-      <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="bNotes" className="form-label">
-        Bench Notes
-      </label>
-      <textarea
-        id="bNotes"
-        name="bNotes"
-        className="form-control"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.bNotes}
-        rows={3} // Adjust the number of rows as needed
-      />
-    </div>
-  </div>
-</div>
+                    <div className="row mb-3">
+                      <div className="col-3">
+                        <div className="form-check">
+                          <input
+                            id="caseBenchStatus"
+                            name="caseBenchStatus"
+                            type="checkbox"
+                            className="form-check-input"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            checked={formik.values.caseBenchStatus}
+                          />
+                          <label
+                            style={{ fontSize: "14px", fontWeight: "bold" }}
+                            htmlFor="caseBenchStatus"
+                            className="form-check-label"
+                          >
+                            Case Bench Status
+                          </label>
+                        </div>
+                      </div>
 
+                      <div className="col-9">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="bNotes"
+                          className="form-label"
+                        >
+                          Bench Notes
+                        </label>
+                        <textarea
+                          id="bNotes"
+                          name="bNotes"
+                          className="form-control"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.bNotes}
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-<div
-  className="tab-pane fade border p-3"
-  id="case-lawyer"
-  role="tabpanel"
-  aria-labelledby="case-lawyer-tab"
->
-  <div className="row mb-3">
-    <div className="col-3 mb-3">
-      <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="lStartDate" className="form-label">
-        Lawyer Start Date
-      </label>
-      <input
-        id="lStartDate"
-        name="lStartDate"
-        type="date"
-        className="form-control"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.lStartDate}
-      />
-      {formik.touched.lStartDate && formik.errors.lStartDate ? (
-        <div className="text-danger">{formik.errors.lStartDate}</div>
-      ) : null}
-    </div>
+                  <div
+                    className="tab-pane fade border p-3"
+                    id="case-lawyer"
+                    role="tabpanel"
+                    aria-labelledby="case-lawyer-tab"
+                  >
+                    <div className="row mb-3">
+                      <div className="col-3 mb-3">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="lStartDate"
+                          className="form-label"
+                        >
+                          Lawyer Start Date
+                        </label>
+                        <input
+                          id="lStartDate"
+                          name="lStartDate"
+                          type="date"
+                          className="form-control"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.lStartDate}
+                        />
+                        {formik.touched.lStartDate &&
+                        formik.errors.lStartDate ? (
+                          <div className="text-danger">
+                            {formik.errors.lStartDate}
+                          </div>
+                        ) : null}
+                      </div>
 
-    <div className="col-3 mb-3">
-      <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="lEndDate" className="form-label">
-        Lawyer End Date
-      </label>
-      <input
-        id="lEndDate"
-        name="lEndDate"
-        type="date"
-        className="form-control"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.lEndDate}
-      />
-      {formik.touched.lEndDate && formik.errors.lEndDate ? (
-        <div className="text-danger">{formik.errors.lEndDate}</div>
-      ) : null}
-    </div>
-  </div>
+                      <div className="col-3 mb-3">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="lEndDate"
+                          className="form-label"
+                        >
+                          Lawyer End Date
+                        </label>
+                        <input
+                          id="lEndDate"
+                          name="lEndDate"
+                          type="date"
+                          className="form-control"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.lEndDate}
+                        />
+                        {formik.touched.lEndDate && formik.errors.lEndDate ? (
+                          <div className="text-danger">
+                            {formik.errors.lEndDate}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
 
-  {/* New row for caseLawyerStatus and lNotes */}
-  <div className="row mb-3">
-    <div className="col-3">
-      <div className="form-check">
-        <input
-          id="caseLawyerStatus"
-          name="caseLawyerStatus"
-          type="checkbox"
-          className="form-check-input"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          checked={formik.values.caseLawyerStatus}
-        />
-        <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="caseLawyerStatus" className="form-check-label">
-          Case Lawyer Status
-        </label>
-      </div>
-    </div>
+                    <div className="row mb-3">
+                      <div className="col-3">
+                        <div className="form-check">
+                          <input
+                            id="caseLawyerStatus"
+                            name="caseLawyerStatus"
+                            type="checkbox"
+                            className="form-check-input"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            checked={formik.values.caseLawyerStatus}
+                          />
+                          <label
+                            style={{ fontSize: "14px", fontWeight: "bold" }}
+                            htmlFor="caseLawyerStatus"
+                            className="form-check-label"
+                          >
+                            Case Lawyer Status
+                          </label>
+                        </div>
+                      </div>
 
-    <div className="col-9">
-      <label style={{ fontSize: '14px', fontWeight: 'bold' }} htmlFor="lNotes" className="form-label">
-        Lawyer Notes
-      </label>
-      <textarea
-        id="lNotes"
-        name="lNotes"
-        className="form-control"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.lNotes}
-        rows={3}  
-      />
-    </div>
-  </div>
-</div>
-
+                      <div className="col-9">
+                        <label
+                          style={{ fontSize: "14px", fontWeight: "bold" }}
+                          htmlFor="lNotes"
+                          className="form-label"
+                        >
+                          Lawyer Notes
+                        </label>
+                        <textarea
+                          id="lNotes"
+                          name="lNotes"
+                          className="form-control"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.lNotes}
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Submit Button */}
                 <div className="modal-footer">
                   <button type="submit" className="btn btn-primary">
                     Submit
@@ -931,11 +1023,6 @@ const CreateRegistration = (props) => {
           </div>
         </div>
       </div>
-
-      <AddCaseTypeModal
-        show={showAddCaseTypeModal}
-        onHide={() => setShowAddCaseTypeModal(false)}
-      />
     </div>
   );
 };

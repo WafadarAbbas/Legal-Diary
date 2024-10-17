@@ -41,6 +41,7 @@ const Menu = [
   { path: '/CaseManagement', icon: 'fa fa-folder-open', title: 'CaseManagement', 
     children: [
       { path: '/CaseManagement/CaseRegistration', title: 'Case Registration', icon: 'fa fa-file-alt', },
+      { path: '/CaseManagement/CaseProceding', title: 'Case Proceeding', icon: 'fa fa-hands', },
     ]
   },
   { path: '/Testing', icon: 'fa fa-gear', title: 'Testing', 

@@ -1,34 +1,35 @@
 import React, { useRef, useState } from 'react';
 import Swal from 'sweetalert2';
-import { useTestPanel } from '../../../Compo/TestPanelContext';
 import { TestPanel, TestPanelHeader, TestPanelBody, TestPanelFooter } from '../../../Compo/TestPanel';
-import Footer from '../../../Compo/Footer';
-import CreateRegistration from './CreateRegistration';
 import { useNavigate } from 'react-router-dom';
-import _ from 'lodash';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import EditRegistration from './EditRegistration';
-import ApiCall from '../../../Apicall/ApiCall';
-
-const CaseRegistration = () => {
+import _ from 'lodash';  
+import 'bootstrap-icons/font/bootstrap-icons.css';  
+import Footer from '../../../Compo/Footer';
+import { useTestPanel } from '../../../Compo/TestPanelContext';
+import CreateProceding from './CreateProceding';
+import EditProceding from './EditProceding';
+ 
+const CaseProceding = () => {
     const navigate = useNavigate();
     const createRef = useRef(null);
     const refClose = useRef(null);
-    const editRef = useRef(null);
-    const editClose = useRef(null);
+    const editRef = useRef(null);  
+    const editClose = useRef(null); 
     const { MaxResultCount } = useTestPanel();
     const [skipCount, setSkipCount] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
-    const [keyword, setKeyword] = useState('');
-    const [selectedRegistrationId, setSelectedRegistrationId] = useState(null); 
-    const debouncedKeyword = useRef(_.debounce((value) => setKeyword(value), 300)).current;
+    const [keyword, setKeyword] = useState('');   
+    const [selectedProcedingId, setSelectedProcedingId] = useState(null); 
 
-    const dummyData = [
-        { id: 1, caseNo: "12345", firstParty: "John Doe", secondParty: "Jane Smith" },
-        { id: 2, caseNo: "67890", firstParty: "Acme Corp", secondParty: "Globex Corp" },
-        { id: 3, caseNo: "54321", firstParty: "Alice Johnson", secondParty: "Bob White" },
-    ];
-
+    const debouncedKeyword = useRef(_.debounce((value) => setKeyword(value), 300)).current;   
+    
+ 
+    const [caseData, setCaseData] = useState([
+        { id: 1, caseNo: '1001', caseTitle: 'State vs John Doe', previousDate: '2024-01-01', nextDate: '2024-02-01', benchCode: 'BC-001' },
+        { id: 2, caseNo: '1002', caseTitle: 'State vs Jane Doe', previousDate: '2024-01-05', nextDate: '2024-02-05', benchCode: 'BC-002' },
+        { id: 3, caseNo: '1003', caseTitle: 'State vs Richard Roe', previousDate: '2024-01-10', nextDate: '2024-02-10', benchCode: 'BC-003' },
+    ]);
+ 
     const handlePrevious = () => {
         if (skipCount > 0) {
             setSkipCount(skipCount - MaxResultCount);
@@ -41,18 +42,15 @@ const CaseRegistration = () => {
         }
     };
 
-    const handleClick = () => {
-        refClose.current.click();
+    const handleEditClick = (id) => {
+        setSelectedProcedingId(id)
+        editRef.current.click();   
     };
-    
-    const handleEdit = (id) => {
-        setSelectedRegistrationId(id);  
-        editRef.current.click();  
-    };
+
     return (
         <div>
             <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
-                <h1 className="mb-0">Registration</h1>
+                <h1 className="mb-0">Case Proceeding</h1>
             </div>
 
             <div className="bg-white p-3 rounded-3 border">
@@ -77,7 +75,7 @@ const CaseRegistration = () => {
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Search ..."
+                                placeholder="Search Proceeding..."
                                 onChange={(e) => debouncedKeyword(e.target.value)}
                             />
                         </div>
@@ -87,7 +85,7 @@ const CaseRegistration = () => {
                 <hr className="line-separator mb-3" />
 
                 <TestPanel>
-                    <TestPanelHeader>Registration</TestPanelHeader>
+                    <TestPanelHeader>Case Proceeding</TestPanelHeader>
                     <TestPanelBody>
                         <div className="table-responsive">
                             <table className="table">
@@ -95,24 +93,28 @@ const CaseRegistration = () => {
                                     <tr>
                                         <th>Id</th>
                                         <th>Case No</th>
-                                        <th>First Party</th>
-                                        <th>Second Party</th>
-                                        <th>Actions</th>  
+                                        <th>Case Title</th>
+                                        <th>Previous Date</th>
+                                        <th>Next Date</th>
+                                        <th>Bench Code</th>
+                                        <th>Edit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {dummyData.map((item) => (
-                                        <tr key={item.id}>
-                                            <td>{item.id}</td>
-                                            <td>{item.caseNo}</td>
-                                            <td>{item.firstParty}</td>
-                                            <td>{item.secondParty}</td>
+                                    {caseData.map((caseItem) => (
+                                        <tr key={caseItem.id}>
+                                            <td>{caseItem.id}</td>
+                                            <td>{caseItem.caseNo}</td>
+                                            <td>{caseItem.caseTitle}</td>
+                                            <td>{caseItem.previousDate}</td>
+                                            <td>{caseItem.nextDate}</td>
+                                            <td>{caseItem.benchCode}</td>
                                             <td>
                                                 <button
                                                     className="btn btn-warning"
-                                                    onClick={() => handleEdit(item.id)}
+                                                    onClick={() => handleEditClick(caseItem.id)}
                                                 >
-                                                    <i className="bi bi-pencil"></i> Edit
+                                                    Edit
                                                 </button>
                                             </td>
                                         </tr>
@@ -143,11 +145,13 @@ const CaseRegistration = () => {
                     </TestPanelFooter>
                 </TestPanel>
             </div>
-            <CreateRegistration open={createRef} close={refClose} />
-            <EditRegistration open={editRef} close={editClose} RegistrationId={selectedRegistrationId} />  
+            
+            <CreateProceding open={createRef} close={refClose} />
+            <EditProceding open={editRef} close={editClose} ProcedingId={selectedProcedingId} />
             <Footer />
         </div>
     );
 };
 
-export default CaseRegistration;
+export default CaseProceding;
+
