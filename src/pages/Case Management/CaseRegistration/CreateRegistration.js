@@ -62,7 +62,7 @@ const CreateRegistration = (props) => {
     } catch (error) {
       console.error("Failed to fetch branch data:", error);
     }
-  };
+  }; 
 
   const fetchCaseTypes = async () => {
     try {

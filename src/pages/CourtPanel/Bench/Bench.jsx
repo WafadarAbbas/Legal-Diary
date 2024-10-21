@@ -1,31 +1,31 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import { useTestPanel } from '../../../Compo/TestPanelContext';
 import { TestPanel, TestPanelHeader, TestPanelBody, TestPanelFooter } from '../../../Compo/TestPanel';
 import CreateBench from './CreateBench';
 import { useNavigate } from 'react-router-dom';
-import _ from 'lodash';  
-import 'bootstrap-icons/font/bootstrap-icons.css';  
+import _ from 'lodash';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import EditBench from './EditBench';
 import Footer from '../../../Compo/Footer';
 import ApiCall from '../../../Apicall/ApiCall';
- 
+
+
 const Bench = () => {
     const navigate = useNavigate();
     const createRef = useRef(null);
     const refClose = useRef(null);
-    const editRef = useRef(null);  
-    const editClose = useRef(null); 
+    const editRef = useRef(null);
+    const editClose = useRef(null);
+    const [benches, setBenches] = useState([]);
     const { MaxResultCount } = useTestPanel();
     const [skipCount, setSkipCount] = useState(0);
     const [totalCount, setTotalCount] = useState(0);
-    const [keyword, setKeyword] = useState('');   
-   
-    const debouncedKeyword = useRef(_.debounce((value) => setKeyword(value), 300)).current;  
-    
- 
+    const [keyword, setKeyword] = useState('');
+    const [selectedBenchId, setSelectedBenchId] = useState(null);
+    const debouncedKeyword = useRef(_.debounce((value) => setKeyword(value), 300)).current;
 
- 
+
     const handlePrevious = () => {
         if (skipCount > 0) {
             setSkipCount(skipCount - MaxResultCount);
@@ -42,8 +42,40 @@ const Bench = () => {
         refClose.current.click();
     };
 
+    const handleEditClick = (id) => {
+        setSelectedBenchId(id);
+        editRef.current.click();
+    };
 
- 
+   
+        const fetchBenches = async () => {
+            try {
+                const response = await ApiCall({
+                    url: "https://localhost:44311/api/services/app/Bench/GetAllbenchMainData",
+                    method: "GET",
+                });
+
+                if (response?.data?.result?.items) {
+                    setBenches(response.data.result.items);
+                    setTotalCount(response.data.result.totalCount); 
+                }
+            } catch (error) {
+                console.error("Failed to fetch bench data:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to fetch bench data.',
+                });
+            }
+        };
+
+        useEffect(() => {
+               fetchBenches();
+    }, []);
+
+    const fetch = () => {
+        fetchBenches();
+    };
 
     return (
         <div>
@@ -89,12 +121,36 @@ const Bench = () => {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                         
+                                        <th>ID</th>
+                                        <th>Bench Code</th>
+                                        <th>Bench Judges No</th>
+                                        <th>Branch Name</th>
+                                        <th>Court Code</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                               
+                                    {benches.map((bench) => (
+                                        <tr key={bench.id}>
+                                            <td>{bench.id}</td>
+                                            <td>{bench.benchCode}</td>
+                                            <td>{bench.benchOfficerNo}</td>
+                                            <td>{bench.branchBranchName}</td>
+                                            <td>{bench.courtCourtCode}</td>
+                                            <td>
+                                                <button
+                                                    className="btn btn-warning btn-sm"
+                                                    onClick={() => handleEditClick(bench.id)} 
+                                                >
+                                                    <i className="bi bi-pencil"></i> Edit
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
+
+
                             </table>
                         </div>
                     </TestPanelBody>
@@ -120,8 +176,8 @@ const Bench = () => {
                     </TestPanelFooter>
                 </TestPanel>
             </div>
-            <CreateBench open={createRef} close={refClose}  />
-            <EditBench   open={editRef} close={editClose} />
+            <CreateBench open={createRef} close={refClose} onclick={fetch} />
+            <EditBench open={editRef} close={editClose} id={selectedBenchId}  onclick={fetch} />
             <Footer />
         </div>
     );
