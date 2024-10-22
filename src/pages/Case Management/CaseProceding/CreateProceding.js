@@ -34,7 +34,7 @@ const CreateProceding = (props) => {
       firstPartyName: "",  
       secondPartyName: "",  
       caseTitle: "",  
-      benchCode: "",  
+      benchId: "",  
       caseType: "",
       previousDate: "",  
       currentDate: "", 
@@ -262,17 +262,17 @@ const CreateProceding = (props) => {
                   <div className="col-6 mb-3">
                     <label
                       style={{ fontSize: "14px", fontWeight: "bold" }}
-                      htmlFor="benchCode"
+                      htmlFor="benchId"
                       className="form-label"
                     >
                       Bench Code
                     </label>
                     <input
                       type="text"
-                      id="benchCode"
-                      name="benchCode"
+                      id="benchId"
+                      name="benchId"
                       className="form-control"
-                      value={formik.values.benchCode}
+                      value={formik.values.benchId}
                       readOnly
                     />
                   </div>

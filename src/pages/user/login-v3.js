@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { AppSettings } from './../../config/app-settings.js';
-import CryptoJS from 'crypto-js'; // Import crypto-js
-import axios from 'axios'; // Import axios
-import Swal from 'sweetalert2'; // Import SweetAlert
+import CryptoJS from 'crypto-js';  
+import axios from 'axios' 
+import Swal from 'sweetalert2';  
 import myImage from './LegalDiaryLogo.png';
 
 function LoginV3() {
@@ -11,6 +11,7 @@ function LoginV3() {
   const [redirect, setRedirect] = useState(false);
   const [userNameOrEmailAddress, setUserNameOrEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     context.handleSetAppSidebarNone(true);
@@ -24,55 +25,114 @@ function LoginV3() {
     };
   }, [context]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-    const requestBody = {
-      userNameOrEmailAddress,
-      password,
-    };
+  //   const requestBody = {
+  //     userNameOrEmailAddress,
+  //     password,
+  //   };
 
-    try {
-      const response = await axios.post('https://localhost:44311/api/TokenAuth/Authenticate', requestBody, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  //   try {
+  //     const response = await axios.post('https://localhost:44311/api/TokenAuth/Authenticate', requestBody, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      if (response.status === 200) {
-        const data = response.data;
-        if (data && data.result && data.result.accessToken) {
-          const secretKey = 'your-secret-key';  
-          const encryptedToken = CryptoJS.AES.encrypt(data.result.accessToken, secretKey).toString();
-          localStorage.setItem('authToken', encryptedToken);
-          setRedirect(true);
-        } else {
-          throw new Error('No access token found in the response.');
-        }
-      } else {
-        throw new Error(`Unexpected response status: ${response.status}`);
-      }
-    } catch (error) {
-      let errorMessage = '';
+  //     if (response.status === 200) {
+  //       const data = response.data;
+  //       if (data && data.result && data.result.accessToken) {
+  //         const secretKey = 'your-secret-key';  
+  //         const encryptedToken = CryptoJS.AES.encrypt(data.result.accessToken, secretKey).toString();
+  //         localStorage.setItem('authToken', encryptedToken);
+  //         setRedirect(true);
+  //       } else {
+  //         throw new Error('No access token found in the response.');
+  //       }
+  //     } else {
+  //       throw new Error(`Unexpected response status: ${response.status}`);
+  //     }
+  //   } catch (error) {
+  //     let errorMessage = '';
       
-      if (error.response) {   
-        errorMessage = `Server responded with status ${error.response.status}: ${error.response.data}`;
-      } else if (error.request) {  
-        errorMessage = 'No response received from server.';
-      } else {
-        errorMessage = `Error setting up request: ${error.message}`;
-      }
+  //     if (error.response) {   
+  //       errorMessage = `Server responded with status ${error.response.status}: ${error.response.data}`;
+  //     } else if (error.request) {  
+  //       errorMessage = 'No response received from server.';
+  //     } else {
+  //       errorMessage = `Error setting up request: ${error.message}`;
+  //     }
       
-      // Display the error message using SweetAlert
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: errorMessage,
-      });
+     
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Login Failed',
+  //       text: errorMessage,
+  //     });
 
-      console.error('Error:', error.message);
-    }
+  //     console.error('Error:', error.message);
+  //   }
+  // };
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  const requestBody = {
+    userNameOrEmailAddress,
+    password,
+    rememberClient: rememberMe 
   };
+
+  try {
+    const response = await axios.post('https://localhost:44311/api/TokenAuth/Authenticate', requestBody, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status === 200) {
+      const data = response.data;
+      if (data && data.result && data.result.accessToken) {
+        const secretKey = 'your-secret-key';  
+        const encryptedToken = CryptoJS.AES.encrypt(data.result.accessToken, secretKey).toString();
+        localStorage.setItem('authToken', encryptedToken);
+        setRedirect(true);
+      } else {
+        throw new Error('No access token found in the response.');
+      }
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+  } catch (error) {
+    let errorMessage = 'An error occurred';
+    let errorDetails = '';
+
+    if (error.response && error.response.data && error.response.data.error) {
+     
+      errorMessage = error.response.data.error.message || 'Login failed!';
+      errorDetails = error.response.data.error.details || 'No further details available.';
+    } else if (error.request) {
+      errorMessage = 'No response received from server.';
+      errorDetails = 'The request was made, but no response was received.';
+    } else {
+      errorMessage = `Error setting up request: ${error.message}`;
+      errorDetails = error.stack;
+    }
+
+  
+    Swal.fire({
+      icon: 'error',
+      title: errorMessage, // Main error message
+      text: errorDetails,  // Displaying the error details like "Invalid user name or password"
+      footer: 'Please check your credentials and try again.', // Footer message for extra guidance
+    });
+
+    console.error('Error:', error.message);
+  }
+};
+
+  
 
   if (redirect) {
     return <Navigate to='/dashboard/v3' />;
@@ -123,16 +183,17 @@ function LoginV3() {
               </label>
             </div>
             <div className="form-check mb-30px">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value="1"
-                id="rememberMe"
-              />
-              <label className="form-check-label" htmlFor="rememberMe">
-                Remember Me
-              </label>
-            </div>
+    <input
+      className="form-check-input"
+      type="checkbox"
+      value={rememberMe}
+      id="rememberMe"
+      onChange={(e) => setRememberMe(e.target.checked)}  // Update rememberMe state
+    />
+    <label className="form-check-label" htmlFor="rememberMe">
+      Remember Me
+    </label>
+  </div>
             <div className="mb-15px">
               <button type="submit" className="btn btn-theme d-block h-45px w-100 btn-lg fs-14px">
                 Sign me in
